@@ -14,15 +14,15 @@ public class PlayerWeapon : MonoBehaviour
     public GameObject projectileInstantPrefab;
     public GameObject projectileDelayedPrefab;
 
-    public float projectileSpeed = 30f;
+    public float projectileSpeed = 200f;
     public float fireCooldown = 0.2f;
 
     public Camera mainCamera;
-    public float normalFOV = 60f;
+    public float normalFOV = 80f;
     public float aimFOV = 40f;
     public float fovLerpSpeed = 10f;
 
-    bool isAiming;
+    public bool isAiming { get; private set; }
     float lastShotTime;
     bool useDelayedProjectile;
 
@@ -43,10 +43,10 @@ public class PlayerWeapon : MonoBehaviour
     void Start()
     {
         if (mainCamera == null)
+        {
             mainCamera = Camera.main;
-
-        if (mainCamera != null)
             mainCamera.fieldOfView = normalFOV;
+        }
 
         if (weaponModel != null && showWeaponOnlyWhenAiming)
             weaponModel.SetActive(false);
@@ -78,6 +78,7 @@ public class PlayerWeapon : MonoBehaviour
 
         isAiming = aimAction.action.IsPressed();
 
+
         if (weaponModel != null && showWeaponOnlyWhenAiming)
             weaponModel.SetActive(isAiming);
     }
@@ -86,6 +87,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (fireAction == null) return;
         if (!fireAction.action.triggered) return;
+        if (!isAiming) return;
         if (Time.time < lastShotTime + fireCooldown) return;
         if (muzzle == null) return;
 
@@ -106,10 +108,6 @@ public class PlayerWeapon : MonoBehaviour
         if (mainCamera == null) return;
 
         float target = isAiming ? aimFOV : normalFOV;
-        mainCamera.fieldOfView = Mathf.Lerp(
-            mainCamera.fieldOfView,
-            target,
-            Time.deltaTime * fovLerpSpeed
-        );
+        mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView,target,Time.deltaTime * fovLerpSpeed);
     }
 }

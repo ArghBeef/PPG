@@ -13,6 +13,11 @@ public class PlayerMovement : MonoBehaviour
     public float standHeight = 2f;
     public float crouchHeight = 1f;
 
+    public float slowSpeedMult = 0.5f;
+    public float speedSpeedMult = 1.5f;
+
+    public PlayerWeapon playerWeaponRef;
+
     Rigidbody rb;
     CapsuleCollider col;
     bool crouch;
@@ -53,7 +58,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 i = moveAction.action.ReadValue<Vector2>();
         Vector3 moveLocal = new Vector3(i.x, 0f, i.y);
-        Vector3 moveWorld = transform.TransformDirection(moveLocal) * moveSpeed;
+
+        float speed = moveSpeed;
+        if (playerWeaponRef != null && playerWeaponRef.isAiming)
+            speed *= slowSpeedMult;
+
+        Vector3 moveWorld = transform.TransformDirection(moveLocal) * speed;
 
         Vector3 v = rb.linearVelocity;
         v.x = moveWorld.x;

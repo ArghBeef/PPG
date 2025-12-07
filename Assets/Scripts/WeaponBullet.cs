@@ -4,6 +4,7 @@ public class WeaponBullet : MonoBehaviour
 {
     public bool destroyImmediatelyOnHit = true;
     public float delayAfterHit = 5f;
+    public float damage = 15f;
 
     public float maxLifeTime = 10f;
 
@@ -23,6 +24,7 @@ public class WeaponBullet : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+
         Vector3 hitPoint = transform.position;
         if (collision.contacts.Length > 0)
             hitPoint = collision.contacts[0].point;
@@ -35,6 +37,8 @@ public class WeaponBullet : MonoBehaviour
 
         if (hitSound != null)
             AudioSource.PlayClipAtPoint(hitSound, hitPoint, hitSoundVolume);
+
+        collision.gameObject.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
 
         if (destroyImmediatelyOnHit)
         {
