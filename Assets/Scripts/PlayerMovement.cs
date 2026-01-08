@@ -17,6 +17,11 @@ public class PlayerMovement : MonoBehaviour
     public float slowSpeedMult = 0.5f;
     public float speedSpeedMult = 1.5f;
 
+    public PlayerStats stats;
+    public float staminaDrain = 20f;
+    public float staminaRegen = 15f;
+    bool staminaCooldown = false;
+
     public PlayerWeapon playerWeaponRef;
 
     Rigidbody rb;
@@ -61,9 +66,29 @@ public class PlayerMovement : MonoBehaviour
         else
             col.height = standHeight;
 
-        sprint = sprintAction.action.IsPressed();
-        if(sprint)
+        if (stats.stamina <= 0)
+        {
+            staminaCooldown = true;
+        }
+
+        if (stats.stamina >= stats.maxStamina)
+        {
+            staminaCooldown = false;
+        }
+
+        sprint = sprintAction.action.IsPressed() && !staminaCooldown;
+
+        if (sprint)
+        {
             speed *= speedSpeedMult;
+            stats.stamina -= staminaDrain * Time.deltaTime;
+        }
+        else
+        {
+            stats.stamina += staminaRegen * Time.deltaTime;
+        }
+
+        //stats.stamina = Mathf.Clamp(stats.stamina, 0, stats.maxStamina);
     }
 
     void FixedUpdate()

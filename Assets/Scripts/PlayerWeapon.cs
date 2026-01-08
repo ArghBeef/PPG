@@ -22,6 +22,9 @@ public class PlayerWeapon : MonoBehaviour
     public float aimFOV = 40f;
     public float fovLerpSpeed = 10f;
 
+    public PlayerStats stats;
+    public int ammoUsage = 10;
+
     public bool isAiming { get; private set; }
     float lastShotTime;
     bool useDelayedProjectile;
@@ -90,6 +93,9 @@ public class PlayerWeapon : MonoBehaviour
         if (!isAiming) return;
         if (Time.time < lastShotTime + fireCooldown) return;
         if (muzzle == null) return;
+
+        if (stats.ammo < ammoUsage) return;
+        stats.ChangeAmmo(-ammoUsage);
 
         GameObject prefab = useDelayedProjectile ? projectileDelayedPrefab : projectileInstantPrefab;
         if (prefab == null) return;
