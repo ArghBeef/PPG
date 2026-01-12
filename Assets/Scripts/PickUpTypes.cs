@@ -1,7 +1,11 @@
 public enum PickupType
 {
     Health,
+    Damage,
     Ammo,
+    AmmoGold,
     Stamina,
-    Gold
+    Gold,
+    Medkit,
+    AmmoBox
 }
