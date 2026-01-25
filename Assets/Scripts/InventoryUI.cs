@@ -1,66 +1,63 @@
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class InventoryUI : MonoBehaviour
 {
     public Inventory inventory;
-    public GameObject inventoryPanel;
-    public Transform itemsParent;
-    public GameObject slotPrefab;
-    public TMP_Text goldText;
 
-    public InputActionReference inventoryAction;
+    public GameObject InvParent;
+    public Transform InvPanel;
 
-    void OnEnable()
+    public GameObject InventorySlot;
+    public TMP_Text Gold;
+
+    public InputActionReference InventoryAction;
+
+    void Awake()
     {
-        inventoryAction.action.Enable();
-        inventoryAction.action.performed += OnInventoryPressed;
+        InventoryAction.action.Enable();
+        InventoryAction.action.performed += ctx => Toggle();
+
+        InvParent.SetActive(false);
     }
 
-    void OnDisable()
+    void Toggle()
     {
-        inventoryAction.action.performed -= OnInventoryPressed;
-        inventoryAction.action.Disable();
+        bool open = !InvParent.activeSelf;
+        InvParent.SetActive(open);
+
+        if (open)
+            Refresh();
     }
 
-    void Start()
+    public void Refresh()
     {
-        inventoryPanel.SetActive(false);
-    }
+        foreach (Transform c in InvPanel)
+            Destroy(c.gameObject);
 
-    void OnInventoryPressed(InputAction.CallbackContext ctx)
-    {
-        ToggleInventory();
-    }
-
-    void ToggleInventory()
-    {
-        bool isOpen = inventoryPanel.activeSelf;
-        inventoryPanel.SetActive(!isOpen);
-
-        Cursor.lockState = !isOpen
-            ? CursorLockMode.None
-            : CursorLockMode.Locked;
-
-        Cursor.visible = !isOpen;
-
-        if (!isOpen)
-            RefreshUI();
-    }
-
-    void RefreshUI()
-    {
-        foreach (Transform child in itemsParent)
-            Destroy(child.gameObject);
+        ShopUI shopUI = FindObjectOfType<ShopUI>();
+        if (shopUI == null)
+        {
+            return;
+        }
 
         foreach (InventoryItem item in inventory.items)
         {
-            GameObject slot = Instantiate(slotPrefab, itemsParent);
+            GameObject slot = Instantiate(InventorySlot, InvPanel);
+
             slot.GetComponent<RawImage>().texture = item.icon;
+
+            ShopItem shopItem = slot.GetComponent<ShopItem>();
+            if (shopItem == null)
+            {
+                continue;
+            }
+
+            shopItem.Setup(item, shopUI, false);
         }
 
-        goldText.text = "Gold: " + inventory.gold;
+        Gold.text = inventory.gold.ToString();
     }
 }

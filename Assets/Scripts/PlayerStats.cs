@@ -11,14 +11,27 @@ public class PlayerStats : MonoBehaviour
     public float maxStamina = 100f;
     public float stamina = 100f;
 
+    public float experience = 0f;
+    public float experiencePerLevel = 100f;
+
+    public GameObject deathScreen;
+
     public void ChangeHealth(int value)
     {
         health += value;
+        if(health <= 0)
+        {
+            this.gameObject.SetActive(true);
+            deathScreen.SetActive(true);
+        }
     }
 
     public void ChangeAmmo(int value)
     {
         ammo += value;
     }
+
+
+    
 
 }

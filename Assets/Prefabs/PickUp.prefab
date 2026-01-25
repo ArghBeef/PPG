@@ -124,11 +124,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 760824e358d2d174aa650e550de476c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pickup
-  pickupType: 4
-  value: 10
+  pickupType: 1
+  value: 15
   storeInInventory: 0
   inventoryItem:
-    itemName: 
+    name: 
     icon: {fileID: 0}
     value: 0
     pickupType: 0
