@@ -27,6 +27,9 @@ public class InventoryUI : MonoBehaviour
     {
         bool open = !InvParent.activeSelf;
         InvParent.SetActive(open);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
 
         if (open)
             Refresh();

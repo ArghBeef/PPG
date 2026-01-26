@@ -16,4 +16,22 @@ public class Inventory : MonoBehaviour
     {
         items.Remove(item);
     }
+
+    public void UseItem(InventoryItem item)
+    {
+        switch (item.pickupType)
+        {
+            case PickupType.Medkit:
+                GetComponent<PlayerStats>().ChangeHealth(item.value);
+                break;
+
+            case PickupType.Stamina:
+                GetComponent<PlayerStats>().stamina += item.value;
+                break;
+
+            case PickupType.Ammo:
+                GetComponent<PlayerStats>().ChangeAmmo(item.value);
+                break;
+        }
+    }
 }

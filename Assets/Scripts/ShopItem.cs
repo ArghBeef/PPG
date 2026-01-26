@@ -58,14 +58,37 @@ public class ShopItem : MonoBehaviour,
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (item == null || shopUI == null) return;
+        if (item == null) return;
 
         if (Time.time - lastClickTime < DoubleClickTime)
         {
-            if (isShopItem)
-                shopUI.Buy(item);
-            else
-                shopUI.Sell(item);
+            InventoryUI invUI = FindObjectOfType<InventoryUI>();
+            Hotbar hotbar = FindObjectOfType<Hotbar>();
+
+            bool shopOpen = shopUI != null && shopUI.ShopParent.activeSelf;
+            bool inventoryOpen = invUI != null && invUI.InvParent.activeSelf;
+
+            if (shopOpen)
+            {
+                if (isShopItem)
+                    shopUI.Buy(item);
+                else
+                    shopUI.Sell(item);
+
+                lastClickTime = Time.time;
+                return;
+            }
+
+            if (!shopOpen && inventoryOpen && !isShopItem)
+            {
+                if (hotbar != null)
+                {
+                    hotbar.AddItem(item);
+                }
+
+                lastClickTime = Time.time;
+                return;
+            }
         }
 
         lastClickTime = Time.time;
