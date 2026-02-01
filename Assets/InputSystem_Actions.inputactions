@@ -176,6 +176,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "NPCInteract",
+                    "type": "Button",
+                    "id": "683e73e2-2787-46a6-ae0e-36459860f7f5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -671,6 +680,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HotBar5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "184ef1df-c834-4470-87ea-72d8b3c8c45e",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NPCInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

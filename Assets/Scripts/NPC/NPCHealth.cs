@@ -3,22 +3,30 @@ using UnityEngine.UI;
 
 public class NPCHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
-    int health;
-    public Slider healthSlider;
+    public float maxHealth = 100f;
+    float currentHealth;
+
+    public Slider slider;
 
     void Start()
     {
-        health = maxHealth;
-        healthSlider.maxValue = maxHealth;
-        healthSlider.value = health;
+        currentHealth = maxHealth;
+
+        if (slider != null)
+        {
+            slider.maxValue = maxHealth;
+            slider.value = currentHealth;
+        }
     }
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(float damage)
     {
-        health -= dmg;
-        healthSlider.value = health;
-        if (health <= 0)
+        currentHealth -= damage;
+
+        if (slider != null)
+            slider.value = currentHealth;
+
+        if (currentHealth <= 0)
             Destroy(gameObject);
     }
 }

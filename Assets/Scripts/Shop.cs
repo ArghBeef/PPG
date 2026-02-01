@@ -49,7 +49,7 @@ public class Shop : MonoBehaviour
             CloseShop();
     }
 
-    void Toggle()
+    public void Toggle()
     {
         if (ShopParent.activeSelf)
             CloseShop();

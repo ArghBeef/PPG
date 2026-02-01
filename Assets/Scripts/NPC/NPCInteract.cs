@@ -19,12 +19,15 @@ public class NPCInteract : MonoBehaviour
 
     void OnDestroy()
     {
-        InteractAction.action.performed -= OnInteract;
+        if (InteractAction != null)
+            InteractAction.action.performed -= OnInteract;
     }
 
     void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!playerInRange) return;
+
+        if (CompareTag("Enemy")) return;
 
         if (DialogSystem.Instance.IsOpen)
             DialogSystem.Instance.CloseDialog();
@@ -41,6 +44,11 @@ public class NPCInteract : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             playerInRange = false;
+
+            if (DialogSystem.Instance.IsOpen)
+                DialogSystem.Instance.CloseDialog();
+        }
     }
 }

@@ -26,6 +26,11 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        ChangeHealth(-Mathf.RoundToInt(damage));
+    }
+
     public void ChangeAmmo(int value)
     {
         ammo += value;

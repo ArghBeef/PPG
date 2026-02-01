@@ -22,12 +22,9 @@ public class WeaponBullet : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-
         Vector3 hitPoint = transform.position;
-        if (collision.contacts.Length > 0)
-            hitPoint = collision.contacts[0].point;
 
         if (hitEffectPrefab != null)
         {
@@ -38,32 +35,8 @@ public class WeaponBullet : MonoBehaviour
         if (hitSound != null)
             AudioSource.PlayClipAtPoint(hitSound, hitPoint, hitSoundVolume);
 
-        collision.gameObject.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
+        other.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
 
-        if (destroyImmediatelyOnHit)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            if (!hasHit)
-            {
-                hasHit = true;
-
-                Rigidbody rb = GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.linearVelocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.isKinematic = true;
-                }
-
-                Collider col = GetComponent<Collider>();
-                if (col != null)
-                    col.enabled = false;
-
-                Destroy(gameObject, delayAfterHit);
-            }
-        }
+        Destroy(gameObject);
     }
 }

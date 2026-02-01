@@ -5,59 +5,60 @@ using UnityEngine.UI;
 public class DialogSystem : MonoBehaviour
 {
     public static DialogSystem Instance;
+    public bool IsOpen { get; private set; }
 
-    public GameObject dialogPanel;
+    public GameObject panel;
     public TMP_Text npcNameText;
     public TMP_Text dialogText;
     public Transform optionsParent;
     public Button optionPrefab;
-    public bool IsOpen { get; private set; }
 
-    NPCDialog current;
+    NPCDialog currentNPC;
     int index;
 
     void Awake()
     {
         Instance = this;
-        dialogPanel.SetActive(false);
+        panel.SetActive(false);
     }
 
     public void StartDialog(NPCDialog npc)
     {
-        current = npc;
+        currentNPC = npc;
         index = 0;
-        dialogPanel.SetActive(true);
+
+        npcNameText.text = npc.npcName;
+        panel.SetActive(true);
         IsOpen = true;
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         Show();
     }
 
     void Show()
     {
-        DialogNode node = current.dialog[index];
-        npcNameText.text = current.npcName;
+        DialogNode node = currentNPC.dialog[index];
         dialogText.text = node.text;
 
         foreach (Transform c in optionsParent)
             Destroy(c.gameObject);
 
-        foreach (var opt in node.options)
+        foreach (DialogOption opt in node.options)
         {
             Button b = Instantiate(optionPrefab, optionsParent);
-            b.GetComponentInChildren<TMP_Text>().text = opt.text;
+            TMP_Text t = b.GetComponentInChildren<TMP_Text>();
+            t.text = opt.text;
+
+            b.onClick.RemoveAllListeners();
             b.onClick.AddListener(() => Choose(opt));
         }
     }
 
     void Choose(DialogOption opt)
     {
-        if (opt.action == DialogAction.OpenShop)
-            FindObjectOfType<ShopUI>().OpenShop();
-
-        if (opt.action == DialogAction.GiveItem && opt.itemToGive != null)
-        {
-            Inventory inv = FindObjectOfType<Inventory>();
-            inv.AddItem(opt.itemToGive);
-        }
+        ExecuteAction(opt);
 
         if (opt.nextIndex >= 0)
         {
@@ -70,10 +71,36 @@ public class DialogSystem : MonoBehaviour
         }
     }
 
+    void ExecuteAction(DialogOption opt)
+    {
+        switch (opt.action)
+        {
+            case DialogAction.OpenShop:
+                OpenNPCShop();
+                break;
+
+            case DialogAction.GiveItem:
+                if (opt.itemToGive != null)
+                    FindFirstObjectByType<Inventory>().AddItem(opt.itemToGive);
+                break;
+        }
+    }
+
     public void CloseDialog()
     {
-        dialogPanel.SetActive(false);
+        panel.SetActive(false);
         IsOpen = false;
-        current = null;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        currentNPC?.OnDialogClosed();
+        currentNPC = null;
+    }
+
+    void OpenNPCShop()
+    {
+        CloseDialog();
+        currentNPC.npcShop.Toggle();
     }
 }

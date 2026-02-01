@@ -107,7 +107,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBullet
   destroyImmediatelyOnHit: 1
   delayAfterHit: 5
+  damage: 15
   maxLifeTime: 10
   hitEffectPrefab: {fileID: 0}
   hitSound: {fileID: 0}
